@@ -128,8 +128,14 @@
             const tabContents = document.querySelectorAll('.tab-content');
 
             function showTab(tabId) {
+                const contentId = tabId.startsWith('tab-') ? tabId : `tab-${tabId}`;
+                const contentEl = document.getElementById(contentId);
+                if (!contentEl) {
+                    return; // защита от попытки открыть несуществующую вкладку
+                }
+
                 tabContents.forEach(tc => tc.classList.add('hidden'));
-                document.getElementById(tabId).classList.remove('hidden');
+                contentEl.classList.remove('hidden');
 
                 tabLinks.forEach(link => {
                     link.classList.remove('text-indigo-600', 'border-b-2', 'border-indigo-600');
@@ -148,8 +154,12 @@
                 });
             });
 
-            // Показать первую вкладку по умолчанию
-            if (tabLinks.length > 0) {
+            // Определяем вкладку из URL ?tab=
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialTab = urlParams.get('tab');
+            if (initialTab) {
+                showTab(initialTab);
+            } else if (tabLinks.length > 0) {
                 showTab(tabLinks[0].getAttribute('data-tab'));
             }
         });

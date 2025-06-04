@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Conversation;
 
 class User extends Authenticatable
 {
@@ -42,5 +43,14 @@ class User extends Authenticatable
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Все беседы пользователя.
+     */
+    public function conversations()
+    {
+        return Conversation::where('user_one_id', $this->id)
+            ->orWhere('user_two_id', $this->id);
     }
 }
