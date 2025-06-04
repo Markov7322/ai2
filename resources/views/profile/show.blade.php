@@ -84,7 +84,7 @@
                     @forelse($comments as $comment)
                         <div class="bg-gray-50 p-4 rounded-md border">
                             <div class="flex items-center justify-between">
-                                <a href="{{ route('categories.show', $comment->review->category->slug) }}#review-{{ $comment->review->id }}" class="text-indigo-600 hover:underline font-medium">
+                                <a href="{{ route('categories.show', $comment->review->category->slug) }}#comment-{{ $comment->id }}" class="text-indigo-600 hover:underline font-medium">
                                     К отзыву: {{ \Illuminate\Support\Str::limit($comment->review->content, 50) }}
                                 </a>
                                 <span class="text-gray-500 text-sm">{{ $comment->created_at->format('d.m.Y H:i') }}</span>

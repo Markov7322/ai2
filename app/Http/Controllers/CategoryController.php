@@ -13,7 +13,13 @@ class CategoryController extends Controller
     public function show(string $slug)
     {
         $category = Category::where('slug', $slug)
-            ->with(['children', 'reviews.user', 'reviews.reactions'])
+            ->with([
+                'children',
+                'reviews.user',
+                'reviews.reactions',
+                'reviews.comments.user',
+                'reviews.comments.replies.user',
+            ])
             ->firstOrFail();
 
         return view('categories.show', compact('category'));
