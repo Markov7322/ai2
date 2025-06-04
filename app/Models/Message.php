@@ -12,6 +12,7 @@ class Message extends Model
         'sender_id',
         'message',
         'is_read',
+        'image_path',
     ];
 
     public function conversation(): BelongsTo

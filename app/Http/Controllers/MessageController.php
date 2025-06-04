@@ -66,6 +66,7 @@ class MessageController extends Controller
 
         $data = $request->validate([
             'message' => 'required|string',
+            'image'   => 'nullable|image|max:2048',
         ]);
 
         $message = $conversation->messages()->create([
@@ -73,6 +74,12 @@ class MessageController extends Controller
             'message' => $data['message'],
             'is_read' => false,
         ]);
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('messages', 'public');
+            $message->image_path = $path;
+            $message->save();
+        }
         if ($request->expectsJson()) {
             return response()->json([
                 'id' => $message->id,

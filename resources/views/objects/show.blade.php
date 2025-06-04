@@ -66,6 +66,11 @@
                     <div class="text-gray-700 leading-relaxed">
                         {!! nl2br(e($review->content)) !!}
                     </div>
+                    @if($review->image_path)
+                        <div class="mt-2">
+                            <img src="{{ Storage::url($review->image_path) }}" alt="image" class="max-w-xs rounded">
+                        </div>
+                    @endif
                     <div class="mt-2 flex items-center text-sm">
                         <form action="{{ route('reviews.react', $review) }}" method="POST" class="mr-2">
                             @csrf
@@ -112,7 +117,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('objects.reviews.store', ['slug' => $object->slug]) }}" method="POST">
+                    <form action="{{ route('objects.reviews.store', ['slug' => $object->slug]) }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         {{-- Поле “Оценка” --}}
@@ -137,10 +142,15 @@
                             <label for="content" class="block text-sm font-medium text-gray-700 mb-1">
                                 Текст отзыва <span class="text-red-500">*</span>
                             </label>
-                            <textarea id="content" name="content" rows="5" required
+                        <textarea id="content" name="content" rows="5" required
                                       class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm
                                              focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                       placeholder="Поделитесь своим опытом…">{{ old('content') }}</textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Изображение</label>
+                            <input type="file" name="image" id="image" accept="image/*">
                         </div>
 
                         <div class="flex justify-end">

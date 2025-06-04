@@ -7,7 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {{-- Подключаем скомпилированные стили Breeze/Vite (TailwindCSS + Alpine) --}}
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @if (file_exists(public_path('build/manifest.json')))
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @endif
 
     {{-- Если у тебя есть собственный CSS (style.css с фиксацией хедера, футером и т. д.), подключаем его тоже --}}
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
