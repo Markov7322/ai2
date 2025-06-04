@@ -24,7 +24,7 @@ class ReviewObjectController extends Controller
         // Загружаем отзывы сразу с пользователями (авторами)
         $object->load([
             'reviews' => function($q) {
-                $q->with('user')->orderBy('created_at', 'desc');
+                $q->with(['user', 'reactions'])->orderBy('created_at', 'desc');
             }
         ]);
 

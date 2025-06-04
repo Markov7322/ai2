@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Reaction;
 
 class Review extends Model
 {
@@ -35,5 +36,13 @@ class Review extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Reactions (likes/dislikes) for this review.
+     */
+    public function reactions()
+    {
+        return $this->hasMany(Reaction::class);
     }
 }

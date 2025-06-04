@@ -62,6 +62,22 @@
                     <div class="text-gray-700 leading-relaxed">
                         {!! nl2br(e($review->content)) !!}
                     </div>
+                    <div class="mt-2 flex items-center text-sm">
+                        <form action="{{ route('reviews.react', $review) }}" method="POST" class="mr-2">
+                            @csrf
+                            <input type="hidden" name="type" value="like">
+                            <button type="submit" class="text-green-600 hover:underline">
+                                👍 {{ $review->reactions->where('type', 'like')->count() }}
+                            </button>
+                        </form>
+                        <form action="{{ route('reviews.react', $review) }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="type" value="dislike">
+                            <button type="submit" class="text-red-600 hover:underline">
+                                👎 {{ $review->reactions->where('type', 'dislike')->count() }}
+                            </button>
+                        </form>
+                    </div>
                 </div>
             @empty
                 <p class="text-gray-600">Пока нет ни одного отзыва. Станьте первым!</p>
