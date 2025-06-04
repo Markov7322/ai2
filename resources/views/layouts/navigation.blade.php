@@ -66,6 +66,9 @@
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Профиль') }}
                             </x-dropdown-link>
+                            <x-dropdown-link :href="route('messages.index')">
+                                {{ __('Сообщения') }}
+                            </x-dropdown-link>
                             @if(Auth::user() && Auth::user()->role === 'admin')
                                 <x-dropdown-link :href="route('admin.dashboard')">
                                     {{ __('Админ') }}
@@ -154,6 +157,9 @@
                 <div class="mt-3 space-y-1">
                     <x-responsive-nav-link :href="route('profile.edit')">
                         {{ __('Профиль') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('messages.index')">
+                        {{ __('Сообщения') }}
                     </x-responsive-nav-link>
                     @if(Auth::user() && Auth::user()->role === 'admin')
                         <x-responsive-nav-link :href="route('admin.dashboard')">
