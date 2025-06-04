@@ -6,6 +6,14 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ReviewCommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReactionController;
+use App\Http\Controllers\InstallController;
+
+if (!env('APP_INSTALLED', false)) {
+    Route::get('/install', [InstallController::class, 'show'])->name('install.show');
+    Route::post('/install', [InstallController::class, 'store'])->name('install.store');
+    Route::fallback(fn () => redirect('/install'));
+    return;
+}
 
 /*
 |--------------------------------------------------------------------------
