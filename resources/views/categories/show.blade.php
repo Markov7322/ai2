@@ -27,87 +27,55 @@
         @else
             <div>
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">Отзывы ({{ $category->reviews->count() }})</h3>
+                @php
+                    $negCount = $category->reviews->where('rating', '<=', 2)->count();
+                    $posCount = $category->reviews->where('rating', '>=', 4)->count();
+                @endphp
+                <div class="reviews-filter mb-4 space-x-4 text-sm">
+                    <a href="#" data-filter="all" class="text-indigo-600 font-semibold">Все</a>
+                    <a href="#" data-filter="negative">Негатив ({{ $negCount }})</a>
+                    <a href="#" data-filter="positive">Позитив ({{ $posCount }})</a>
+                </div>
 
                 @forelse ($category->reviews as $review)
-                    <div id="review-{{ $review->id }}" class="bg-white shadow rounded-lg p-4 mb-4">
-                        <div class="flex justify-between items-center mb-1">
-                            @if($review->user)
-                                <a href="{{ route('users.show', $review->user) }}" class="font-medium text-gray-800 hover:underline">
-                                    {{ $review->user->name }}
-                                </a>
-                            @else
-                                <span class="font-medium text-gray-800">Аноним</span>
-                            @endif
-                            <span class="text-yellow-500 font-semibold">
-                                {{ $review->rating }} ★
-                            </span>
-                        </div>
-                        <div class="text-gray-500 text-sm mb-2">
-                            {{ $review->created_at->format('d.m.Y H:i') }}
-                        </div>
-                        <div class="text-gray-700 leading-relaxed">
-                            {!! nl2br(e($review->content)) !!}
-                        </div>
-                        @if($review->image_path)
-                            <div class="mt-2">
-                                <img src="{{ Storage::url($review->image_path) }}" alt="image" class="max-w-xs rounded">
-                            </div>
-                        @endif
-                        <div class="mt-2 flex items-center text-sm">
-                            <form action="{{ route('reviews.react', $review) }}" method="POST" class="mr-2">
-                                @csrf
-                                <input type="hidden" name="type" value="like">
-                                <button type="submit" class="text-green-600 hover:underline">
-                                    👍 {{ $review->reactions->where('type', 'like')->count() }}
-                                </button>
-                            </form>
-                            <form action="{{ route('reviews.react', $review) }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="type" value="dislike">
-                                <button type="submit" class="text-red-600 hover:underline">
-                                    👎 {{ $review->reactions->where('type', 'dislike')->count() }}
-                                </button>
-                            </form>
-                        </div>
+                    <x-review-card :review="$review" />
 
-                        {{-- Comments --}}
-                        <div class="mt-4 space-y-4">
-                            @foreach ($review->comments->where('parent_id', null) as $comment)
-                                <div id="comment-{{ $comment->id }}" class="border-t pt-2">
-                                    <div class="text-sm text-gray-700 flex justify-between">
-                                        <span>{{ $comment->user->name }}</span>
-                                        <span class="text-gray-500">{{ $comment->created_at->format('d.m.Y H:i') }}</span>
-                                    </div>
-                                    <p class="mt-1">{{ $comment->content }}</p>
-                                    @foreach ($comment->replies as $reply)
-                                        <div id="comment-{{ $reply->id }}" class="ml-4 mt-2 border-l pl-2">
-                                            <div class="text-sm text-gray-700 flex justify-between">
-                                                <span>{{ $reply->user->name }}</span>
-                                                <span class="text-gray-500">{{ $reply->created_at->format('d.m.Y H:i') }}</span>
-                                            </div>
-                                            <p class="mt-1">{{ $reply->content }}</p>
-                                        </div>
-                                    @endforeach
-
-                                    @auth
-                                        <form action="{{ route('reviews.comments.store', $review) }}" method="POST" class="mt-2">
-                                            @csrf
-                                            <input type="hidden" name="parent_id" value="{{ $comment->id }}">
-                                            <textarea name="content" class="w-full border rounded mb-1" rows="2" placeholder="Ваш ответ..."></textarea>
-                                            <button type="submit" class="text-sm text-indigo-600">Ответить</button>
-                                        </form>
-                                    @endauth
+                    <div class="mt-4 space-y-4" id="comment-form-{{ $review->id }}">
+                        @foreach ($review->comments->where('parent_id', null) as $comment)
+                            <div id="comment-{{ $comment->id }}" class="border-t pt-2">
+                                <div class="text-sm text-gray-700 flex justify-between">
+                                    <span>{{ $comment->user->name }}</span>
+                                    <span class="text-gray-500">{{ $comment->created_at->format('d.m.Y H:i') }}</span>
                                 </div>
-                            @endforeach
+                                <p class="mt-1">{{ $comment->content }}</p>
+                                @foreach ($comment->replies as $reply)
+                                    <div id="comment-{{ $reply->id }}" class="ml-4 mt-2 border-l pl-2">
+                                        <div class="text-sm text-gray-700 flex justify-between">
+                                            <span>{{ $reply->user->name }}</span>
+                                            <span class="text-gray-500">{{ $reply->created_at->format('d.m.Y H:i') }}</span>
+                                        </div>
+                                        <p class="mt-1">{{ $reply->content }}</p>
+                                    </div>
+                                @endforeach
 
-                            @auth
-                                <form action="{{ route('reviews.comments.store', $review) }}" method="POST" class="border-t pt-2">
-                                    @csrf
-                                    <textarea name="content" class="w-full border rounded mb-1" rows="2" placeholder="Ваш комментарий..."></textarea>
-                                    <button type="submit" class="text-sm text-indigo-600">Отправить</button>
-                                </form>
-                            @endauth
-                        </div>
+                                @auth
+                                    <form action="{{ route('reviews.comments.store', $review) }}" method="POST" class="mt-2">
+                                        @csrf
+                                        <input type="hidden" name="parent_id" value="{{ $comment->id }}">
+                                        <textarea name="content" class="w-full border rounded mb-1" rows="2" placeholder="Ваш ответ..."></textarea>
+                                        <button type="submit" class="text-sm text-indigo-600">Ответить</button>
+                                    </form>
+                                @endauth
+                            </div>
+                        @endforeach
+
+                        @auth
+                            <form action="{{ route('reviews.comments.store', $review) }}" method="POST" class="border-t pt-2">
+                                @csrf
+                                <textarea name="content" class="w-full border rounded mb-1" rows="2" placeholder="Ваш комментарий..."></textarea>
+                                <button type="submit" class="text-sm text-indigo-600">Отправить</button>
+                            </form>
+                        @endauth
                     </div>
                 @empty
                     <p class="text-gray-600">Пока нет ни одного отзыва. Станьте первым!</p>

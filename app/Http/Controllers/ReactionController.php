@@ -28,6 +28,13 @@ class ReactionController extends Controller
             );
         }
 
+        $likes = $review->reactions()->where('type', 'like')->count();
+        $dislikes = $review->reactions()->where('type', 'dislike')->count();
+
+        if ($request->expectsJson()) {
+            return response()->json(['likes' => $likes, 'dislikes' => $dislikes]);
+        }
+
         return redirect()->back();
     }
 }
