@@ -72,6 +72,9 @@
                             </div>
                             <div class="mt-2 text-yellow-500 font-semibold">★ {{ $review->rating }}</div>
                             <p class="mt-1 text-gray-700">{{ \Illuminate\Support\Str::limit($review->content, 120) }}</p>
+                            @if($review->image_path)
+                                <img src="{{ Storage::url($review->image_path) }}" alt="image" class="mt-2 max-w-xs rounded">
+                            @endif
                         </div>
                     @empty
                         <p class="text-gray-600 italic">Отзывов пока нет.</p>
@@ -87,6 +90,9 @@
                                 <span class="text-gray-500 text-sm">{{ $comment->created_at->format('d.m.Y H:i') }}</span>
                             </div>
                             <p class="mt-2 text-gray-700">{{ \Illuminate\Support\Str::limit($comment->content, 120) }}</p>
+                            @if($comment->image_path)
+                                <img src="{{ Storage::url($comment->image_path) }}" alt="image" class="mt-2 max-w-xs rounded">
+                            @endif
                         </div>
                     @empty
                         <p class="text-gray-600 italic">Комментариев пока нет.</p>

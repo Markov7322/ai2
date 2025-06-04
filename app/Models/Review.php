@@ -12,6 +12,7 @@ class Review extends Model
         'review_object_id',
         'content',
         'rating',
+        'image_path',
     ];
 
     /**

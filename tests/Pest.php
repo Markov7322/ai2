@@ -45,3 +45,10 @@ function something()
 {
     // ..
 }
+
+use function Pest\Laravel\actingAs as pestActingAs;
+
+function actingAs($user, $driver = null)
+{
+    return pestActingAs($user, $driver);
+}

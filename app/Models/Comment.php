@@ -10,6 +10,7 @@ class Comment extends Model
         'user_id',
         'review_id',
         'content',
+        'image_path',
     ];
 
     /**

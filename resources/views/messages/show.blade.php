@@ -17,15 +17,19 @@
                     <div class="{{ $msg->sender_id === auth()->id() ? 'text-right' : 'text-left' }}">
                         <div class="inline-block px-3 py-2 rounded {{ $msg->sender_id === auth()->id() ? 'bg-indigo-100' : 'bg-gray-100' }}">
                             <p>{{ $msg->message }}</p>
+                            @if($msg->image_path)
+                                <img src="{{ Storage::url($msg->image_path) }}" alt="image" class="mt-2 max-w-xs rounded">
+                            @endif
                             <span class="text-xs text-gray-500">{{ $msg->created_at->format('d.m.Y H:i') }}</span>
                         </div>
                     </div>
                 @endforeach
             </div>
 
-            <form id="message-form" method="POST" action="{{ route('messages.store', $conversation) }}" class="mt-4 flex space-x-2">
+            <form id="message-form" method="POST" action="{{ route('messages.store', $conversation) }}" class="mt-4 flex space-x-2" enctype="multipart/form-data">
                 @csrf
                 <input type="text" name="message" class="flex-1 border-gray-300 rounded" required>
+                <input type="file" name="image" accept="image/*">
                 <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded">Отправить</button>
             </form>
         </div>

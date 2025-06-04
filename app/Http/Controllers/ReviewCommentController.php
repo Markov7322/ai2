@@ -28,17 +28,24 @@ class ReviewCommentController extends Controller
         // Валидация контента комментария
         $data = $request->validate([
             'content' => 'required|string|min:3',
+            'image'   => 'nullable|image|max:2048',
         ], [
             'content.required' => 'Поле комментария не может быть пустым.',
             'content.min'      => 'Комментарий слишком короткий.',
         ]);
 
         // Создаём комментарий
-        Comment::create([
+        $comment = Comment::create([
             'user_id'   => Auth::id(),
             'review_id' => $review->id,
             'content'   => $data['content'],
         ]);
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('comments', 'public');
+            $comment->image_path = $path;
+            $comment->save();
+        }
 
         return redirect()
             ->route('objects.show', $review->object->slug)

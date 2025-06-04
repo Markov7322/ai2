@@ -45,6 +45,7 @@ class ReviewObjectController extends Controller
         $validated = $request->validate([
             'content' => 'required|string|min:10|max:2000',
             'rating'  => 'required|integer|min:1|max:5',
+            'image'   => 'nullable|image|max:2048',
         ]);
 
         // Сохраняем новый отзыв
@@ -55,6 +56,12 @@ class ReviewObjectController extends Controller
             'rating'            => $validated['rating'],
         ]);
         $review->save();
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('reviews', 'public');
+            $review->image_path = $path;
+            $review->save();
+        }
 
         // Пересчёт среднего рейтинга и количества отзывов
         $allRatings = $object->reviews()->pluck('rating')->toArray();
