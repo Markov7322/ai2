@@ -7,12 +7,12 @@ use App\Models\Category;
 class HomeController extends Controller
 {
     /**
-     * Показывает главную страницу со списком категорий и объектов.
+     * Показывает главную страницу со списком категорий.
      */
     public function index()
     {
-        // Загружаем только корневые категории с подкатегориями и объектами
-        $categories = Category::with(['children.children', 'objects'])
+        // Загружаем корневые категории с подкатегориями
+        $categories = Category::with('children.children')
             ->whereNull('parent_id')
             ->get();
 

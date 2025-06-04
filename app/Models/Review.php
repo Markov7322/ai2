@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Reaction;
+use App\Models\Category;
 
 class Review extends Model
 {
     protected $fillable = [
         'user_id',
-        'review_object_id',
+        'category_id',
         'title',
         'content',
         'pros',
@@ -28,11 +29,11 @@ class Review extends Model
     }
 
     /**
-     * Отзыв принадлежит объекту (review_object).
+     * Отзыв принадлежит категории.
      */
-    public function object()
+    public function category()
     {
-        return $this->belongsTo(ReviewObject::class, 'review_object_id');
+        return $this->belongsTo(Category::class);
     }
 
     /**

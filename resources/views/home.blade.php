@@ -3,7 +3,7 @@
     {{-- Слот "header" попадёт в @isset($header) внутри layouts/app.blade.php --}}
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Категории и объекты') }}
+            {{ __('Категории') }}
         </h2>
     </x-slot>
 

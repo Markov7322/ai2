@@ -15,9 +15,6 @@
                     <a href="#tab-main" class="tab-link text-gray-600 hover:text-indigo-600 font-medium" data-tab="main">
                         Основное
                     </a>
-                    <a href="#tab-objects" class="tab-link text-gray-600 hover:text-indigo-600 font-medium" data-tab="objects">
-                        Мои объекты ({{ $myObjects->count() }})
-                    </a>
                     <a href="#tab-reviews" class="tab-link text-gray-600 hover:text-indigo-600 font-medium" data-tab="reviews">
                         Мои отзывы ({{ $myReviews->count() }})
                     </a>
@@ -84,31 +81,16 @@
                 </div>
 
                 {{-- 2. Мои объекты --}}
-                <div id="tab-objects" class="tab-content hidden space-y-4">
-                    @forelse ($myObjects as $object)
-                        <div class="bg-gray-50 p-4 rounded-md border">
-                            <div class="flex items-center justify-between">
-                                <a href="{{ route('objects.show', $object->slug) }}" class="text-indigo-600 hover:underline font-medium">
-                                    {{ $object->title }}
-                                </a>
-                                <span class="text-gray-500 text-sm">{{ $object->created_at->format('d.m.Y') }}</span>
-                            </div>
-                            <p class="mt-1 text-gray-700">Категория: {{ $object->category?->title }}</p>
-                        </div>
-                    @empty
-                        <p class="text-gray-600 italic">Вы ещё не создали ни одного объекта.</p>
-                    @endforelse
-                </div>
 
                 {{-- 3. Мои отзывы --}}
                 <div id="tab-reviews" class="tab-content hidden space-y-4">
                     @forelse ($myReviews as $review)
                         <div class="bg-gray-50 p-4 rounded-md border">
                             <div class="flex items-center justify-between">
-                                {{-- Ссылка на страницу объекта --}}
-                                <a href="{{ route('objects.show', $review->object->slug) }}"
+                                {{-- Ссылка на категорию --}}
+                                <a href="{{ route('categories.show', $review->category->slug) }}"
                                    class="text-indigo-600 hover:underline font-medium">
-                                    {{ $review->object->title }}
+                                    {{ $review->category->title }}
                                 </a>
                                 <span class="text-gray-500 text-sm">{{ $review->created_at->format('d.m.Y') }}</span>
                             </div>
@@ -127,8 +109,8 @@
                     @forelse ($myComments as $comment)
                         <div class="bg-gray-50 p-4 rounded-md border">
                             <div class="flex items-center justify-between">
-                                {{-- Ссылка на отзыв (объект#review-id) --}}
-                                <a href="{{ route('objects.show', $comment->review->object->slug) }}#review-{{ $comment->review->id }}"
+                                {{-- Ссылка на отзыв (категория#review-id) --}}
+                                <a href="{{ route('categories.show', $comment->review->category->slug) }}#review-{{ $comment->review->id }}"
                                    class="text-indigo-600 hover:underline font-medium">
                                     К отзыву: {{ \Illuminate\Support\Str::limit($comment->review->content, 50) }}
                                 </a>
