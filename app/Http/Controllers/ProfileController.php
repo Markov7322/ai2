@@ -31,9 +31,9 @@ class ProfileController extends Controller
                            ->get();
 
 
-        // Загружаем комментарии пользователя вместе с отзывами и объектами
+        // Загружаем комментарии пользователя вместе с отзывами и категориями отзывов
         $myComments = Comment::where('user_id', $user->id)
-                             ->with('review.object')
+                             ->with('review.category')
                              ->orderBy('created_at', 'desc')
                              ->get();
 
