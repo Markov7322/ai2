@@ -33,6 +33,11 @@ Route::post('/categories/{slug}/reviews', [CategoryController::class, 'storeRevi
      ->middleware('auth')
      ->name('categories.reviews.store');
 
+// Создание нового объекта (подкатегории) с первым отзывом
+Route::post('/categories/{slug}/objects', [CategoryController::class, 'storeObjectWithReview'])
+     ->middleware('auth')
+     ->name('categories.objects.store');
+
 // 4) Сохранение комментария к отзыву (POST), только для авторизованных
 Route::post('/reviews/{review}/comments', [ReviewCommentController::class, 'store'])
      ->middleware('auth')

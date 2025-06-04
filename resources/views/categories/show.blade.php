@@ -24,6 +24,62 @@
                     @endforeach
                 </ul>
             </div>
+            @auth
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h4 class="text-lg font-semibold mb-4">Добавить новый объект и отзыв</h4>
+                    @if(session('success'))
+                        <div class="bg-green-100 border border-green-300 text-green-700 rounded px-4 py-2 mb-4">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                    @if ($errors->any())
+                        <div class="bg-red-50 border border-red-200 text-red-700 rounded p-4 mb-4">
+                            <ul class="list-disc list-inside">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    <form action="{{ route('categories.objects.store', ['slug' => $category->slug]) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-4">
+                            <label for="object_title" class="block text-sm font-medium text-gray-700 mb-1">Название объекта <span class="text-red-500">*</span></label>
+                            <input type="text" id="object_title" name="object_title" value="{{ old('object_title') }}" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required />
+                        </div>
+                        <div class="mb-4">
+                            <label for="rating" class="block text-sm font-medium text-gray-700 mb-1">Ваша оценка <span class="text-red-500">*</span></label>
+                            <select id="rating" name="rating" required class="block w-24 px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="">–</option>
+                                @for ($i = 5; $i >= 1; $i--)
+                                    <option value="{{ $i }}" {{ old('rating') == $i ? 'selected' : '' }}>{{ $i }} звезде{{ $i === 1 ? '' : 's' }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="content" class="block text-sm font-medium text-gray-700 mb-1">Текст отзыва <span class="text-red-500">*</span></label>
+                            <textarea id="content" name="content" rows="5" required class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Поделитесь своим опытом…">{{ old('content') }}</textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label for="pros" class="block text-sm font-medium text-gray-700 mb-1">Достоинства</label>
+                            <textarea id="pros" name="pros" rows="2" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ old('pros') }}</textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label for="cons" class="block text-sm font-medium text-gray-700 mb-1">Недостатки</label>
+                            <textarea id="cons" name="cons" rows="2" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ old('cons') }}</textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Изображение</label>
+                            <input type="file" name="image" id="image" accept="image/*">
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Создать объект и оставить отзыв
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            @endauth
         @else
             <div>
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">Отзывы ({{ $category->reviews->count() }})</h3>
@@ -103,6 +159,10 @@
                         <form action="{{ route('categories.reviews.store', ['slug' => $category->slug]) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-4">
+                                <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Название объекта</label>
+                                <input type="text" id="title" name="title" value="{{ old('title') }}" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                            </div>
+                            <div class="mb-4">
                                 <label for="rating" class="block text-sm font-medium text-gray-700 mb-1">
                                     Ваша оценка <span class="text-red-500">*</span>
                                 </label>
@@ -118,6 +178,14 @@
                                     Текст отзыва <span class="text-red-500">*</span>
                                 </label>
                                 <textarea id="content" name="content" rows="5" required class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Поделитесь своим опытом…">{{ old('content') }}</textarea>
+                            </div>
+                            <div class="mb-4">
+                                <label for="pros" class="block text-sm font-medium text-gray-700 mb-1">Достоинства</label>
+                                <textarea id="pros" name="pros" rows="2" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ old('pros') }}</textarea>
+                            </div>
+                            <div class="mb-4">
+                                <label for="cons" class="block text-sm font-medium text-gray-700 mb-1">Недостатки</label>
+                                <textarea id="cons" name="cons" rows="2" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ old('cons') }}</textarea>
                             </div>
                             <div class="mb-4">
                                 <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Изображение</label>
