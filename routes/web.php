@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReviewObjectController;
 use App\Http\Controllers\ReviewCommentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,11 @@ Route::post('/objects/{slug}/reviews', [ReviewObjectController::class, 'storeRev
 Route::post('/reviews/{review}/comments', [ReviewCommentController::class, 'store'])
      ->middleware('auth')
      ->name('reviews.comments.store');
+
+// 4.1) Добавление лайка/дизлайка к отзыву
+Route::post('/reviews/{review}/react', [ReactionController::class, 'store'])
+     ->middleware('auth')
+     ->name('reviews.react');
 
 // 5) Страница “Помощь”
 Route::get('/help', function () {
