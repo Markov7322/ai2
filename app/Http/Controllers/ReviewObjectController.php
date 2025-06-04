@@ -43,17 +43,29 @@ class ReviewObjectController extends Controller
 
         // Валидация
         $validated = $request->validate([
+            'title'   => 'required|string|max:255',
             'content' => 'required|string|min:10|max:2000',
+            'pros'    => 'nullable|string|max:2000',
+            'cons'    => 'nullable|string|max:2000',
             'rating'  => 'required|integer|min:1|max:5',
             'image'   => 'nullable|image|max:2048',
         ]);
+
+        if ($object->reviews()->where('user_id', Auth::id())->exists()) {
+            return redirect()->route('objects.show', ['slug' => $slug])
+                ->with('error', 'Вы уже оставили отзыв на этот объект.');
+        }
 
         // Сохраняем новый отзыв
         $review = new Review([
             'user_id'           => Auth::id(),
             'review_object_id'  => $object->id,
+            'title'            => $validated['title'],
             'content'           => $validated['content'],
+            'pros'              => $validated['pros'] ?? null,
+            'cons'              => $validated['cons'] ?? null,
             'rating'            => $validated['rating'],
+            'status'            => 'pending',
         ]);
         $review->save();
 

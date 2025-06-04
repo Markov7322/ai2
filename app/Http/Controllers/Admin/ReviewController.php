@@ -24,7 +24,11 @@ class ReviewController extends Controller
     public function update(Request $request, Review $review): RedirectResponse
     {
         $data = $request->validate([
+            'title' => 'nullable|string|max:255',
             'content' => 'required|string',
+            'pros' => 'nullable|string',
+            'cons' => 'nullable|string',
+            'status' => 'nullable|string',
             'rating' => 'required|integer|min:1|max:5',
         ]);
         $review->update($data);

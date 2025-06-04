@@ -8,16 +8,23 @@ use App\Models\Reaction;
 
 it('allows user to like a review', function () {
     $user = User::factory()->create();
-    $category = Category::create(['title' => 'Test']);
+    $category = Category::create([
+        'title' => 'Test',
+        'slug' => 'test',
+        'status' => 'active',
+    ]);
     $object = ReviewObject::create([
         'category_id' => $category->id,
         'title' => 'Obj',
         'slug' => 'obj',
+        'status' => 'approved',
     ]);
     $review = Review::create([
         'user_id' => $user->id,
         'review_object_id' => $object->id,
+        'title' => 'Test',
         'content' => 'text',
+        'status' => 'approved',
         'rating' => 5,
     ]);
 

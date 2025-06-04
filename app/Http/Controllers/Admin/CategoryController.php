@@ -26,7 +26,9 @@ class CategoryController extends Controller
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'status' => 'nullable|string',
         ]);
+        $data['slug'] = \Illuminate\Support\Str::slug($data['title']);
         Category::create($data);
         return redirect()->route('admin.categories.index');
     }
@@ -41,7 +43,9 @@ class CategoryController extends Controller
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'status' => 'nullable|string',
         ]);
+        $data['slug'] = \Illuminate\Support\Str::slug($data['title']);
         $category->update($data);
         return redirect()->route('admin.categories.index');
     }

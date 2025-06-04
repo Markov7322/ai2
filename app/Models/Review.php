@@ -10,9 +10,13 @@ class Review extends Model
     protected $fillable = [
         'user_id',
         'review_object_id',
+        'title',
         'content',
+        'pros',
+        'cons',
         'rating',
         'image_path',
+        'status',
     ];
 
     /**
