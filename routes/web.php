@@ -60,3 +60,4 @@ Route::middleware(['auth'])->group(function () {
 
 // 8) В самом низу подключаем маршруты аутентификации Breeze (login/register/logout)
 require __DIR__.'/auth.php';
+require __DIR__.'/admin.php';
