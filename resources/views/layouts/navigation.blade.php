@@ -66,6 +66,11 @@
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Профиль') }}
                             </x-dropdown-link>
+                            @if(Auth::user() && Auth::user()->role === 'admin')
+                                <x-dropdown-link :href="route('admin.dashboard')">
+                                    {{ __('Админ') }}
+                                </x-dropdown-link>
+                            @endif
 
                             <div class="border-t border-gray-100"></div>
 
@@ -150,6 +155,11 @@
                     <x-responsive-nav-link :href="route('profile.edit')">
                         {{ __('Профиль') }}
                     </x-responsive-nav-link>
+                    @if(Auth::user() && Auth::user()->role === 'admin')
+                        <x-responsive-nav-link :href="route('admin.dashboard')">
+                            {{ __('Админ') }}
+                        </x-responsive-nav-link>
+                    @endif
 
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
