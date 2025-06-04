@@ -10,6 +10,7 @@ class Category extends Model
         'title',
         'slug',
         'status',
+        'parent_id',
     ];
 
     /**
@@ -18,5 +19,29 @@ class Category extends Model
     public function objects()
     {
         return $this->hasMany(ReviewObject::class);
+    }
+
+    /**
+     * Parent category relation.
+     */
+    public function parent()
+    {
+        return $this->belongsTo(Category::class, 'parent_id');
+    }
+
+    /**
+     * Children categories relation.
+     */
+    public function children()
+    {
+        return $this->hasMany(Category::class, 'parent_id');
+    }
+
+    /**
+     * Determine if category has no children.
+     */
+    public function isLeaf(): bool
+    {
+        return $this->children()->count() === 0;
     }
 }

@@ -4,11 +4,88 @@ namespace App\Http\Controllers;
 
 use App\Models\ReviewObject;
 use App\Models\Review;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class ReviewObjectController extends Controller
 {
+    /**
+     * Show form to create new review object and review.
+     */
+    public function create()
+    {
+        $categories = Category::with('children')->get();
+        return view('objects.create', compact('categories'));
+    }
+
+    /**
+     * Store new review object with first review.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'category_id'        => 'required|exists:categories,id',
+            'title'              => 'required|string|max:255',
+            'description'        => 'nullable|string',
+            'object_image'       => 'nullable|image|max:2048',
+
+            'review_title'       => 'nullable|string|max:255',
+            'review_content'     => 'required|string|min:10|max:2000',
+            'pros'               => 'nullable|string|max:2000',
+            'cons'               => 'nullable|string|max:2000',
+            'rating'             => 'required|integer|min:1|max:5',
+            'review_image'       => 'nullable|image|max:2048',
+        ]);
+
+        $category = Category::findOrFail($validated['category_id']);
+        if ($category->children()->exists()) {
+            return back()->withErrors(['category_id' => 'Выберите подкатегорию.']);
+        }
+
+        if (ReviewObject::where('user_id', Auth::id())
+            ->where('category_id', $category->id)->exists()) {
+            return back()->withErrors(['category_id' => 'Вы уже создали объект в этой категории.']);
+        }
+
+        $object = new ReviewObject([
+            'category_id' => $category->id,
+            'user_id'     => Auth::id(),
+            'title'       => $validated['title'],
+            'slug'        => Str::slug($validated['title']) . '-' . uniqid(),
+            'description' => $validated['description'] ?? null,
+            'status'      => 'pending',
+        ]);
+        $object->save();
+
+        if ($request->hasFile('object_image')) {
+            $path = $request->file('object_image')->store('objects', 'public');
+            $object->image_path = $path;
+            $object->save();
+        }
+
+        $review = new Review([
+            'user_id'          => Auth::id(),
+            'review_object_id' => $object->id,
+            'title'            => $validated['review_title'] ?? null,
+            'content'          => $validated['review_content'],
+            'pros'             => $validated['pros'] ?? null,
+            'cons'             => $validated['cons'] ?? null,
+            'rating'           => $validated['rating'],
+            'status'           => 'pending',
+        ]);
+        $review->save();
+
+        if ($request->hasFile('review_image')) {
+            $path = $request->file('review_image')->store('reviews', 'public');
+            $review->image_path = $path;
+            $review->save();
+        }
+
+        return redirect()->route('objects.show', $object->slug)
+            ->with('success', 'Объект и отзыв созданы, ждут модерации.');
+    }
     /**
      * Показывает страницу объекта вместе с отзывами
      */
