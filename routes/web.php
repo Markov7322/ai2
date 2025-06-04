@@ -45,6 +45,9 @@ Route::get('/promo', function () {
     return view('promo');
 })->name('promo');
 
+// Публичный профиль пользователя
+Route::get('/users/{user}', [ProfileController::class, 'show'])->name('users.show');
+
 // 7) Защищённые маршруты (личный кабинет, дашборд)
 Route::middleware(['auth'])->group(function () {
     // 7.1) Дашборд
@@ -61,6 +64,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/messages', [\App\Http\Controllers\MessageController::class, 'index'])->name('messages.index');
     Route::post('/messages/start/{user}', [\App\Http\Controllers\MessageController::class, 'start'])->name('messages.start');
     Route::get('/messages/{conversation}', [\App\Http\Controllers\MessageController::class, 'show'])->name('messages.show');
+    Route::get('/messages/{conversation}/updates', [\App\Http\Controllers\MessageController::class, 'updates'])->name('messages.updates');
     Route::post('/messages/{conversation}', [\App\Http\Controllers\MessageController::class, 'store'])->name('messages.store');
 });
 

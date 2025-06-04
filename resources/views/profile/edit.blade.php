@@ -21,6 +21,9 @@
                     <a href="#tab-comments" class="tab-link text-gray-600 hover:text-indigo-600 font-medium" data-tab="comments">
                         Мои комментарии ({{ $myComments->count() }})
                     </a>
+                    <a href="{{ route('messages.index') }}" class="text-gray-600 hover:text-indigo-600 font-medium">
+                        Сообщения
+                    </a>
                 </nav>
             </div>
 

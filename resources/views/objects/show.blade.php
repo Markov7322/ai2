@@ -46,9 +46,13 @@
                 <div class="bg-white shadow rounded-lg p-4 mb-4">
                     <div class="flex justify-between items-center mb-1">
                         {{-- Имя автора --}}
-                        <span class="font-medium text-gray-800">
-                            {{ $review->user->name ?? 'Аноним' }}
-                        </span>
+                        @if($review->user)
+                            <a href="{{ route('users.show', $review->user) }}" class="font-medium text-gray-800 hover:underline">
+                                {{ $review->user->name }}
+                            </a>
+                        @else
+                            <span class="font-medium text-gray-800">Аноним</span>
+                        @endif
                         {{-- Оценка --}}
                         <span class="text-yellow-500 font-semibold">
                             {{ $review->rating }} ★

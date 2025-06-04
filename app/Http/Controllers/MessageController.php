@@ -7,6 +7,7 @@ use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\JsonResponse;
 
 class MessageController extends Controller
 {
@@ -67,12 +68,55 @@ class MessageController extends Controller
             'message' => 'required|string',
         ]);
 
-        $conversation->messages()->create([
+        $message = $conversation->messages()->create([
             'sender_id' => $user->id,
             'message' => $data['message'],
             'is_read' => false,
         ]);
+        if ($request->expectsJson()) {
+            return response()->json([
+                'id' => $message->id,
+                'sender_id' => $message->sender_id,
+                'message' => e($message->message),
+                'created_at' => $message->created_at->toDateTimeString(),
+                'created_at_formatted' => $message->created_at->format('d.m.Y H:i'),
+            ]);
+        }
 
         return redirect()->route('messages.show', $conversation);
+    }
+
+    public function updates(Conversation $conversation, Request $request): JsonResponse
+    {
+        $user = Auth::user();
+        if ($conversation->user_one_id !== $user->id && $conversation->user_two_id !== $user->id) {
+            abort(403);
+        }
+
+        $after = $request->query('after');
+        $query = $conversation->messages()->orderBy('created_at');
+        if ($after) {
+            $query->where('created_at', '>', $after);
+        }
+
+        $messages = $query->get();
+
+        // mark unread messages as read
+        $conversation->messages()
+            ->where('sender_id', '!=', $user->id)
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
+
+        $data = $messages->map(function (Message $msg) {
+            return [
+                'id' => $msg->id,
+                'sender_id' => $msg->sender_id,
+                'message' => e($msg->message),
+                'created_at' => $msg->created_at->toDateTimeString(),
+                'created_at_formatted' => $msg->created_at->format('d.m.Y H:i'),
+            ];
+        });
+
+        return response()->json($data);
     }
 }
