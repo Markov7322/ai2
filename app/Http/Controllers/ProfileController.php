@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use App\Models\Review;
 use App\Models\Comment;
+use App\Models\ReviewObject;
 use App\Models\User;
 use App\Models\Reaction;
 use Illuminate\Support\Facades\DB;
@@ -24,12 +25,16 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        // Загружаем отзывы пользователя (approved = true) вместе с объектами
+        // Загружаем отзывы пользователя вместе с объектами
         $myReviews = Review::where('user_id', $user->id)
-                           ->where('approved', true)
                            ->with('object')
                            ->orderBy('created_at', 'desc')
                            ->get();
+
+        $myObjects = ReviewObject::where('user_id', $user->id)
+                                ->with('category')
+                                ->orderBy('created_at', 'desc')
+                                ->get();
 
         // Загружаем комментарии пользователя вместе с отзывами и объектами
         $myComments = Comment::where('user_id', $user->id)
@@ -37,7 +42,7 @@ class ProfileController extends Controller
                              ->orderBy('created_at', 'desc')
                              ->get();
 
-        return view('profile.edit', compact('user', 'myReviews', 'myComments'));
+        return view('profile.edit', compact('user', 'myReviews', 'myComments', 'myObjects'));
     }
 
     /**
@@ -84,6 +89,11 @@ class ProfileController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
+        $objects = ReviewObject::where('user_id', $user->id)
+            ->with('category')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         $comments = Comment::where('user_id', $user->id)
             ->with('review.object')
             ->orderBy('created_at', 'desc')
@@ -102,6 +112,6 @@ class ProfileController extends Controller
             ->value('last_activity');
         $lastActivity = $lastActivityTimestamp ? Carbon::createFromTimestamp($lastActivityTimestamp) : null;
 
-        return view('profile.show', compact('user', 'reviews', 'comments', 'reputation', 'followersCount', 'lastActivity'));
+        return view('profile.show', compact('user', 'reviews', 'comments', 'objects', 'reputation', 'followersCount', 'lastActivity'));
     }
 }

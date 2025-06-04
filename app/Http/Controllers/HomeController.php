@@ -11,8 +11,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // Загружаем все категории вместе с объектами (чтобы не было N+1)
-        $categories = Category::with('objects')->get();
+        // Загружаем только корневые категории с подкатегориями и объектами
+        $categories = Category::with(['children.children', 'objects'])
+            ->whereNull('parent_id')
+            ->get();
 
         return view('home', compact('categories'));
     }

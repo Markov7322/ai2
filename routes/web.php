@@ -55,6 +55,10 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
+    // Создание собственного объекта и отзыва
+    Route::get('/objects/create', [ReviewObjectController::class, 'create'])->name('objects.create');
+    Route::post('/objects', [ReviewObjectController::class, 'store'])->name('objects.store');
+
     // 7.2) Профиль пользователя (редактирование, просмотр отзывов/комментариев)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

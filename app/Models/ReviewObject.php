@@ -8,6 +8,7 @@ class ReviewObject extends Model
 {
     protected $fillable = [
         'category_id',
+        'user_id',
         'title',
         'slug',
         'description',
@@ -23,6 +24,14 @@ class ReviewObject extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Owner of the object.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**

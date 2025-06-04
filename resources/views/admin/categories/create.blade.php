@@ -7,6 +7,15 @@
             <input type="text" name="title" class="border rounded w-full" required>
         </div>
         <div>
+            <label class="block">Parent Category</label>
+            <select name="parent_id" class="border rounded w-full">
+                <option value="">-- none --</option>
+                @foreach($categories as $cat)
+                    <option value="{{ $cat->id }}">{{ $cat->title }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
             <label class="block">Description</label>
             <textarea name="description" class="border rounded w-full"></textarea>
         </div>
