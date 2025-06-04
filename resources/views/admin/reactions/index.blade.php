@@ -1,5 +1,4 @@
 <x-admin-layout>
-    @php use Illuminate\Support\Str; @endphp
     <h1 class="text-xl font-bold mb-4">Reactions</h1>
     <table class="min-w-full bg-white">
         <thead>
@@ -16,7 +15,7 @@
             <tr class="border-t">
                 <td class="px-4 py-2">{{ $reaction->id }}</td>
                 <td class="px-4 py-2">{{ $reaction->user->name }}</td>
-                <td class="px-4 py-2">{{ Str::limit($reaction->review->content, 30) }}</td>
+                <td class="px-4 py-2">{{ \Illuminate\Support\Str::limit($reaction->review->content, 30) }}</td>
                 <td class="px-4 py-2">{{ $reaction->type }}</td>
                 <td class="px-4 py-2">
                     <form action="{{ route('admin.reactions.destroy', $reaction) }}" method="POST">
