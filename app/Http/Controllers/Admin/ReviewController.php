@@ -12,7 +12,8 @@ class ReviewController extends Controller
 {
     public function index(): View
     {
-        $reviews = Review::with(['user', 'object'])->paginate(15);
+        // Load the user and category for each review
+        $reviews = Review::with(['user', 'category'])->paginate(15);
         return view('admin.reviews.index', compact('reviews'));
     }
 
