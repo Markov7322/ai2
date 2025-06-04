@@ -11,6 +11,9 @@ use Illuminate\View\View;
 use App\Models\Review;
 use App\Models\Comment;
 use App\Models\User;
+use App\Models\Reaction;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ProfileController extends Controller
 {
@@ -76,6 +79,29 @@ class ProfileController extends Controller
 
     public function show(User $user): View
     {
-        return view('profile.show', compact('user'));
+        $reviews = Review::where('user_id', $user->id)
+            ->with('object')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $comments = Comment::where('user_id', $user->id)
+            ->with('review.object')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $reputation = Reaction::join('reviews', 'reactions.review_id', '=', 'reviews.id')
+            ->where('reviews.user_id', $user->id)
+            ->selectRaw("SUM(CASE WHEN reactions.type = 'like' THEN 1 WHEN reactions.type = 'dislike' THEN -1 ELSE 0 END) as score")
+            ->value('score') ?? 0;
+
+        $followersCount = 0; // система подписок не реализована
+
+        $lastActivityTimestamp = DB::table('sessions')
+            ->where('user_id', $user->id)
+            ->orderByDesc('last_activity')
+            ->value('last_activity');
+        $lastActivity = $lastActivityTimestamp ? Carbon::createFromTimestamp($lastActivityTimestamp) : null;
+
+        return view('profile.show', compact('user', 'reviews', 'comments', 'reputation', 'followersCount', 'lastActivity'));
     }
 }
