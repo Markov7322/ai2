@@ -17,7 +17,6 @@
             <a href="{{ route('admin.dashboard') }}" class="block">Dashboard</a>
             <a href="{{ route('admin.users.index') }}" class="block">Users</a>
             <a href="{{ route('admin.categories.index') }}" class="block">Categories</a>
-            <a href="{{ route('admin.objects.index') }}" class="block">Objects</a>
             <a href="{{ route('admin.reviews.index') }}" class="block">Reviews</a>
             <a href="{{ route('admin.comments.index') }}" class="block">Comments</a>
             <a href="{{ route('admin.reactions.index') }}" class="block">Reactions</a>

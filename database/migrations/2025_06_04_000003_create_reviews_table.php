@@ -16,9 +16,9 @@ return new class extends Migration
                   ->constrained('users')
                   ->onDelete('cascade');
 
-            // Ссылка на объект, к которому пишут отзыв
-            $table->foreignId('review_object_id')
-                  ->constrained('review_objects')
+            // Ссылка на категорию (только листовая категория)
+            $table->foreignId('category_id')
+                  ->constrained('categories')
                   ->onDelete('cascade');
 
             // Текст отзыва (обязательное поле)

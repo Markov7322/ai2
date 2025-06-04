@@ -9,18 +9,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('reviews', function (Blueprint $table) {
-            $table->string('title')->nullable()->after('review_object_id');
+            $table->string('title')->nullable()->after('category_id');
             $table->text('pros')->nullable()->after('rating');
             $table->text('cons')->nullable()->after('pros');
             $table->string('status')->default('pending')->after('cons');
-            $table->unique(['user_id', 'review_object_id'], 'user_object_unique');
+            $table->unique(['user_id', 'category_id'], 'user_category_unique');
         });
     }
 
     public function down(): void
     {
         Schema::table('reviews', function (Blueprint $table) {
-            $table->dropUnique('user_object_unique');
+            $table->dropUnique('user_category_unique');
             $table->dropColumn(['title', 'pros', 'cons', 'status']);
         });
     }

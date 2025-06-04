@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Review;
 
 class Category extends Model
 {
@@ -13,12 +14,13 @@ class Category extends Model
         'parent_id',
     ];
 
+
     /**
-     * Одна категория может иметь много объектов (review_objects).
+     * Отзывы, принадлежащие этой категории.
      */
-    public function objects()
+    public function reviews()
     {
-        return $this->hasMany(ReviewObject::class);
+        return $this->hasMany(Review::class);
     }
 
     /**

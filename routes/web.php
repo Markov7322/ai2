@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ReviewObjectController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ReviewCommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReactionController;
@@ -13,17 +13,17 @@ use App\Http\Controllers\ReactionController;
 |--------------------------------------------------------------------------
 */
 
-// 1) Главная страница (список категорий и объектов)
+// 1) Главная страница (список категорий)
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// 2) Просмотр отдельного объекта
-Route::get('/objects/{slug}', [ReviewObjectController::class, 'show'])
-     ->name('objects.show');
+// 2) Просмотр категории
+Route::get('/categories/{slug}', [CategoryController::class, 'show'])
+     ->name('categories.show');
 
-// 3) Сохранение нового отзыва (POST), доступно только авторизованным
-Route::post('/objects/{slug}/reviews', [ReviewObjectController::class, 'storeReview'])
+// 3) Добавление отзыва в категорию (только для листовых)
+Route::post('/categories/{slug}/reviews', [CategoryController::class, 'storeReview'])
      ->middleware('auth')
-     ->name('objects.reviews.store');
+     ->name('categories.reviews.store');
 
 // 4) Сохранение комментария к отзыву (POST), только для авторизованных
 Route::post('/reviews/{review}/comments', [ReviewCommentController::class, 'store'])
@@ -54,10 +54,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
-
-    // Создание собственного объекта и отзыва
-    Route::get('/objects/create', [ReviewObjectController::class, 'create'])->name('objects.create');
-    Route::post('/objects', [ReviewObjectController::class, 'store'])->name('objects.store');
 
     // 7.2) Профиль пользователя (редактирование, просмотр отзывов/комментариев)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

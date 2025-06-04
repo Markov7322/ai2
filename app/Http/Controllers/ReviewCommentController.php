@@ -48,7 +48,7 @@ class ReviewCommentController extends Controller
         }
 
         return redirect()
-            ->route('objects.show', $review->object->slug)
+            ->route('categories.show', $review->category->slug)
             ->with('success', 'Комментарий успешно добавлен.');
     }
 }

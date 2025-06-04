@@ -2,7 +2,6 @@
 
 use App\Models\User;
 use App\Models\Review;
-use App\Models\ReviewObject;
 use App\Models\Category;
 use App\Models\Reaction;
 
@@ -13,16 +12,9 @@ it('allows user to like a review', function () {
         'slug' => 'test',
         'status' => 'active',
     ]);
-    $object = ReviewObject::create([
-        'category_id' => $category->id,
-        'title' => 'Obj',
-        'slug' => 'obj',
-        'status' => 'approved',
-    ]);
     $review = Review::create([
         'user_id' => $user->id,
-        'review_object_id' => $object->id,
-        'title' => 'Test',
+        'category_id' => $category->id,
         'content' => 'text',
         'status' => 'approved',
         'rating' => 5,
