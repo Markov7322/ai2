@@ -110,7 +110,7 @@
                         <div class="bg-gray-50 p-4 rounded-md border">
                             <div class="flex items-center justify-between">
                                 {{-- Ссылка на отзыв (категория#review-id) --}}
-                                <a href="{{ route('categories.show', $comment->review->category->slug) }}#review-{{ $comment->review->id }}"
+                                <a href="{{ route('categories.show', $comment->review->category->slug) }}#comment-{{ $comment->id }}"
                                    class="text-indigo-600 hover:underline font-medium">
                                     К отзыву: {{ \Illuminate\Support\Str::limit($comment->review->content, 50) }}
                                 </a>

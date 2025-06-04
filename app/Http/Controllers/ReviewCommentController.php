@@ -27,8 +27,9 @@ class ReviewCommentController extends Controller
 
         // Валидация контента комментария
         $data = $request->validate([
-            'content' => 'required|string|min:3',
-            'image'   => 'nullable|image|max:2048',
+            'content'    => 'required|string|min:3',
+            'image'      => 'nullable|image|max:2048',
+            'parent_id'  => 'nullable|exists:comments,id',
         ], [
             'content.required' => 'Поле комментария не может быть пустым.',
             'content.min'      => 'Комментарий слишком короткий.',
@@ -38,6 +39,7 @@ class ReviewCommentController extends Controller
         $comment = Comment::create([
             'user_id'   => Auth::id(),
             'review_id' => $review->id,
+            'parent_id' => $data['parent_id'] ?? null,
             'content'   => $data['content'],
         ]);
 
