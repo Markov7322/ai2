@@ -1,6 +1,6 @@
 {{-- resources/views/home.blade.php --}}
 <x-app-layout>
-    <!-- Слот “header” попадёт в @isset($header) внутри layouts/app.blade.php -->
+    {{-- Слот "header" попадёт в @isset($header) внутри layouts/app.blade.php --}}
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Категории и объекты') }}
