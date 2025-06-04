@@ -11,6 +11,8 @@ class ReviewObject extends Model
         'title',
         'slug',
         'description',
+        'image_path',
+        'status',
         'avg_rating',
         'reviews_count'
     ];

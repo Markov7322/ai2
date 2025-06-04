@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    protected $fillable = ['title'];
+    protected $fillable = [
+        'title',
+        'slug',
+        'status',
+    ];
 
     /**
      * Одна категория может иметь много объектов (review_objects).

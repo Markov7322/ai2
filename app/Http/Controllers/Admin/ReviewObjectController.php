@@ -30,6 +30,8 @@ class ReviewObjectController extends Controller
             'category_id' => 'required|exists:categories,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'status' => 'nullable|string',
+            'image_path' => 'nullable|string',
         ]);
         $data['slug'] = Str::slug($data['title']);
         ReviewObject::create($data);
@@ -48,6 +50,8 @@ class ReviewObjectController extends Controller
             'category_id' => 'required|exists:categories,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'status' => 'nullable|string',
+            'image_path' => 'nullable|string',
         ]);
         $data['slug'] = Str::slug($data['title']);
         $object->update($data);
